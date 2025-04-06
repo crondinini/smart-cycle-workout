@@ -10,7 +10,7 @@ const anthropic = new Anthropic({
 
 /** Quickest implementation to get it started, but could be refactored to use streams if needed */
 export async function generateMessage(userPrompt: string) {
-  let messages: MessageParam[] = [
+  const messages: MessageParam[] = [
     {
       role: "user",
       content: userPrompt,
@@ -60,7 +60,12 @@ export async function generateMessage(userPrompt: string) {
       if (requestedTool.name === "fetch_exercises") {
         try {
           // TODO: Handle input parsing/use schema
-          const fetchedExercises = await fetchExercises(requestedTool.input as unknown as any)
+          const fetchedExercises = await fetchExercises(requestedTool.input as unknown as {
+            muscleGroup: string
+            equipment: string
+            bodyPart: string
+            limit?: number
+          })
           messages.push({
             role: "user",
             content: [
@@ -72,13 +77,14 @@ export async function generateMessage(userPrompt: string) {
             ],
           })
         } catch (error) {
+          const message = error instanceof Error ? error.message : "Unknown error"
           messages.push({
             role: "user",
             content: [
               {
                 type: "tool_result",
                 tool_use_id: requestedTool.id,
-                content: "Could not fetch exercises",
+                content: `Could not fetch exercises: ${message}`,
                 is_error: true,
               },
             ],

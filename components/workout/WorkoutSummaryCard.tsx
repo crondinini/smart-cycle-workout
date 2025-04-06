@@ -23,7 +23,7 @@ export default function WorkoutSummaryCard({summary}: WorkoutSummaryCardProps) {
               variant="secondary"
               className="bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300"
             >
-              Today's Workout
+              Today&apos;s Workout
             </Badge>
           </div>
 

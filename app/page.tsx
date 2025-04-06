@@ -1,39 +1,10 @@
 "use client"
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert"
 import {AudioWaveform, Github} from "lucide-react"
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card"
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import {Separator} from "@/components/ui/separator"
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {GenerateWorkoutInput, WorkoutGoalEnum, WorkoutPlan} from "../lib/workout-prompt-schema"
 import WorkoutWizard from "../components/workout/WorkoutWizard"
 
 export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 sm:p-10 font-[family-name:var(--font-geist-sans)]">
-      {/* <NavigationMenu>
-        <NavigationMenuList>
-          <NavigationMenuItem>
-            <Link href="https://github.com/crondinini/smart-cycle-workout" target="_blank">
-              <NavigationMenuLink>Source Code</NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-        </NavigationMenuList>
-      </NavigationMenu> */}
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-center w-full">
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <AudioWaveform />

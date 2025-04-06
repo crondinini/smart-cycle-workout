@@ -6,7 +6,7 @@ export const runtime = "edge"
 
 const app = new Hono().basePath("/api")
 
-const route = app.post("/generate-workout", async (c) => {
+app.post("/generate-workout", async (c) => {
   const {lastPeriodDate, goal} = await c.req.json()
 
   const prompt = `Last menstrual period was ${lastPeriodDate}. User wants a workout with the goal of ${goal}`
@@ -20,9 +20,9 @@ const route = app.post("/generate-workout", async (c) => {
     const result = WorkoutPlanSchema.parse(parsed)
     return c.json(result)
   } catch (error) {
-    return c.json({error: "Failed to parse response from AI"}, 500)
+    const message = error instanceof Error ? error.message : "Unknown error"
+    return c.json({error: message}, 500)
   }
 })
 
-export type AppType = typeof route
 export const POST = handle(app)
