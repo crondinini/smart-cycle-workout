@@ -17,7 +17,7 @@ export async function generateMessage(userPrompt: string) {
     },
   ]
   const workoutSystemPrompt = systemPrompt()
-
+  console.log("first", userPrompt)
   let response = await anthropic.messages.create({
     model: "claude-3-5-sonnet-latest",
     max_tokens: 1024,
@@ -26,6 +26,7 @@ export async function generateMessage(userPrompt: string) {
     tools,
   })
 
+  console.log("response", response)
   while (response.stop_reason === "tool_use") {
     if (response.role === "assistant") {
       messages.push({
@@ -86,6 +87,7 @@ export async function generateMessage(userPrompt: string) {
       }
     }
 
+    console.log("messages", messages)
     response = await anthropic.messages.create({
       model: "claude-3-5-sonnet-latest",
       max_tokens: 1024,
@@ -93,6 +95,8 @@ export async function generateMessage(userPrompt: string) {
       messages,
       tools,
     })
+
+    console.log("newResponse", response)
   }
 
   const finalResponse = response.content.find((block) => block.type === "text")?.text
