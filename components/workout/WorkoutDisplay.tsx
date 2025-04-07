@@ -2,33 +2,43 @@ import ExerciseCard from "./ExerciseCard"
 import WorkoutSummaryCard from "./WorkoutSummaryCard"
 import {WorkoutPlan} from "../../lib/workout-prompt-schema"
 import TimedProgressBar from "./TimedProgressBar"
+import {useState} from "react"
+import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 
 interface WorkoutDisplayProps {
-  isGenerating: boolean
+  generationState: "not_started" | "in_progress" | "success" | "error"
   workout: WorkoutPlan | null
-  onGenerationComplete: () => void
+  error: string | null
 }
 
 export default function WorkoutDisplay({
-  isGenerating,
+  generationState,
   workout,
-  onGenerationComplete,
+  error
 }: WorkoutDisplayProps) {
-  if (!workout && !isGenerating) {
+  if (generationState === 'not_started') {
     return null
   }
 
-  if (isGenerating) {
+  if (generationState === 'in_progress') {
     return (
       <div className="flex flex-col gap-8 items-center w-full max-w-4xl">
         <h2 className="text-lg font-bold text-center">Generating your workout...</h2>
         <TimedProgressBar
-          isActive={isGenerating}
+          isActive={generationState === 'in_progress'}
           duration={30000} // 30 seconds
-          onComplete={onGenerationComplete}
           className="w-64"
         />
       </div>
+    )
+  }
+
+  if (generationState === 'error') {
+    return (
+      <Alert variant="destructive">
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
     )
   }
 

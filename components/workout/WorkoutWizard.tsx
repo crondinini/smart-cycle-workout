@@ -29,15 +29,15 @@ export enum WorkoutWizardPage {
 
 export default function WorkoutWizard() {
   const [currentPage, setCurrentPage] = useState(WorkoutWizardPage.DATE_SELECTION)
-  const [lastPeriodDate, setLastPeriodDate] = useState<Date | undefined>(new Date())
+  const [lastPeriodDate, setLastPeriodDate] = useState<Date | undefined>(undefined)
   const [goal, setGoal] = useState<WorkoutGoalEnum | null>(null)
-  const [isGenerating, setIsGenerating] = useState(false)
   const [workout, setWorkout] = useState<WorkoutPlan | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [generationState, setGenerationState] = useState<"not_started" | "in_progress" | "success" | "error">("not_started")
 
   useEffect(() => {
     const fetchWorkout = async () => {
-      if (isGenerating && lastPeriodDate && goal) {
+      if (generationState === "in_progress" && lastPeriodDate && goal) {
         try {
           const data = await generateWorkout({
             lastPeriodDate: lastPeriodDate,
@@ -45,31 +45,31 @@ export default function WorkoutWizard() {
           })
           setWorkout(data)
           setError(null)
+          setGenerationState("success")
         } catch (error) {
           console.error("Error generating workout:", error)
           setError("Failed to generate workout.")
-        } finally {
-          setIsGenerating(false)
+          setGenerationState("error")
         }
       }
     }
 
-    if (isGenerating) {
+    if (generationState === "in_progress") {
       fetchWorkout()
     }
-  }, [isGenerating, lastPeriodDate, goal])
+  }, [generationState, lastPeriodDate, goal])
 
   const handleNext = () => {
     if (currentPage === WorkoutWizardPage.DATE_SELECTION && lastPeriodDate) {
       setCurrentPage(WorkoutWizardPage.GOAL_SELECTION)
     } else if (currentPage === WorkoutWizardPage.GOAL_SELECTION && goal) {
       setCurrentPage(WorkoutWizardPage.WORKOUT_DISPLAY)
-      setIsGenerating(true)
+      setGenerationState("in_progress")
     }
   }
 
   return (
-    <>
+    <div className="flex flex-col items-center max-w-3xl mx-auto">
       {currentPage === WorkoutWizardPage.DATE_SELECTION && (
         <DateSelection date={lastPeriodDate} onDateChange={setLastPeriodDate} onNext={handleNext} />
       )}
@@ -80,19 +80,13 @@ export default function WorkoutWizard() {
 
       {currentPage === WorkoutWizardPage.WORKOUT_DISPLAY && (
         <>
-          {error && (
-            <Alert variant="destructive">
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
           <WorkoutDisplay
-            isGenerating={isGenerating}
+            generationState={generationState}
             workout={workout}
-            onGenerationComplete={() => {}}
+            error={error}
           />
         </>
       )}
-    </>
+    </div>
   )
 }
