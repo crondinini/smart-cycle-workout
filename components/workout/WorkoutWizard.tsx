@@ -1,5 +1,4 @@
 import {useState, useEffect} from "react"
-import {Progress} from "@/components/ui/progress"
 import DateSelection from "./DateSelection"
 import GoalSelection from "./GoalSelection"
 import WorkoutDisplay from "./WorkoutDisplay"
@@ -30,7 +29,6 @@ export enum WorkoutWizardPage {
 
 export default function WorkoutWizard() {
   const [currentPage, setCurrentPage] = useState(WorkoutWizardPage.DATE_SELECTION)
-  const [progress, setProgress] = useState(33)
   const [lastPeriodDate, setLastPeriodDate] = useState<Date | undefined>(new Date())
   const [goal, setGoal] = useState<WorkoutGoalEnum | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
@@ -64,10 +62,8 @@ export default function WorkoutWizard() {
   const handleNext = () => {
     if (currentPage === WorkoutWizardPage.DATE_SELECTION && lastPeriodDate) {
       setCurrentPage(WorkoutWizardPage.GOAL_SELECTION)
-      setProgress(66)
     } else if (currentPage === WorkoutWizardPage.GOAL_SELECTION && goal) {
       setCurrentPage(WorkoutWizardPage.WORKOUT_DISPLAY)
-      setProgress(100)
       setIsGenerating(true)
     }
   }
