@@ -2,11 +2,11 @@
 
 Cycle Smart Workout is an AI-powered application that creates personalized workout plans considering where in the menstrual cycle the user is.
 
-The goal of this proof of concept was to explore AI closer and specifically understand better:
+The goal of this proof of concept was to explore Anthropic SDKs closer and specifically understand better:
 
-- How to use Anthropic SDK, and in particular, how to use tools with Anthropic SDK
+- How to use the Anthropic SDK, and in particular, how to use it with custom tools
 - Understand what the integration of an AI SDK looks like in a regular web app
-- I initially planned to use MCP Client/Server, but realized that MCP server is simply an abstraction on top of the "Tools" concept and chose to go with the simpler approach to focus on the core of the proof of concept
+- I initially started this exercise in the context of learning MCP. I thought I could create an MCP Client/Server, but as I learned more I realized that MCP server is an abstraction on top of the "Tools" concept.
 
 ## Technical Implementation
 
@@ -23,14 +23,27 @@ The goal of this proof of concept was to explore AI closer and specifically unde
 
 ## Future Improvements
 
-I would like to explore the following features:
+This is a proof of concept and there's endless room for improvement.
 
-- Persist information to database
+Some that come to mind (not exhaustive by any means):
+
+### UX Related
+
+- Add back button
+- Add generate new workout button once a workout has been generated. Now the user needs to refresh
+- Persist information to database by associating this with a user
 - Include food suggestions based on period cycle
 - Allow user to share workout preferences and take those into account
 
+## AI Generation Related
+
+- The exercise tool fetches data from the API every time, we might want to have a smarter service on top of that API that includes caching of results as well as some more randomess to the options. Possibly fetch all options first, cache that, then fetch it from the database.
+- I don't know if this is the "correct" way of using tools but I was thinking that one way to possibly solve the issue of JSON response format is to use include a tool that tells the AI the response, and so instead of getting the information
+- More robust schema, by using Zod schema in the prompt and in other places
+
+
 ## Learnings
 
-- I finally realized why long chats with LLMs are not ideal from a technical perspective. As a user of Claude desktop, I didn't fully grasp the magnitude of message stacking. Working with the SDK made it clear that the entire message history is sent to the LLM on each new message, which has implications for token usage and response times.
-- I deepened my understanding of effective prompting techniques and utilized resources like the Anthropic Console dashboard (https://console.anthropic.com/dashboard) to refine my approach.
+- I finally understood why long chats with LLMs are not ideal from a technical perspective. As a user of Claude desktop, I didn't fully grasp the magnitude of message stacking. Working with the SDK made it clear that the entire message history is sent to the LLM on each new message, which has implications for token usage and response times.
+- I expanded my understanding of effective prompting techniques and utilized resources like the Anthropic Console dashboard (https://console.anthropic.com/dashboard) to refine my approach.
 - I gained practical knowledge of how "Tools" work in the context of an LLM
