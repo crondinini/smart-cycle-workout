@@ -9,13 +9,13 @@ const app = new Hono().basePath("/api")
 app.post("/generate-workout", async (c) => {
   const {lastPeriodDate, goal} = await c.req.json()
 
-  const prompt = `Last menstrual period was ${lastPeriodDate}. User wants a workout with the goal of ${goal}`
-  const finalMessage = await generateMessage(prompt)
-  if (!finalMessage) {
-    return c.json({error: "Failed to generate workout"}, 500)
-  }
-
   try {
+    const prompt = `Last menstrual period was ${lastPeriodDate}. User wants a workout with the goal of ${goal}`
+    const finalMessage = await generateMessage(prompt)
+    if (!finalMessage) {
+      return c.json({error: "Failed to generate workout"}, 500)
+    }
+
     const parsed = JSON.parse(finalMessage)
     const result = WorkoutPlanSchema.parse(parsed)
     return c.json(result)

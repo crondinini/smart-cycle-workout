@@ -15,7 +15,7 @@ export default function DateSelection({date, onDateChange, onNext}: DateSelectio
   return (
     <>
       <h2 className="text-lg font-bold text-center">When was your last period?</h2>
-      <div className="flex flex-col gap-[32px] items-center">
+      <div className="flex flex-col gap-6 items-center">
         <Calendar
           numberOfMonths={2}
           mode="single"
@@ -30,8 +30,8 @@ export default function DateSelection({date, onDateChange, onNext}: DateSelectio
           Next
         </Button>
       </div>
-      <Alert>
-        <Lightbulb />
+      <Alert className="mt-4 mb-10">
+        <Lightbulb className="h-5 w-5" />
         <AlertTitle>Did you know?</AlertTitle>
         <AlertDescription>
           The menstrual cycle directly impacts workout performance and energy. Rising estrogen in
