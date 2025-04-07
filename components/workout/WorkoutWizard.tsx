@@ -3,7 +3,6 @@ import DateSelection from "./DateSelection"
 import GoalSelection from "./GoalSelection"
 import WorkoutDisplay from "./WorkoutDisplay"
 import {WorkoutGoalEnum, GenerateWorkoutInput, WorkoutPlan} from "@/lib/workout-prompt-schema"
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert"
 
 export async function generateWorkout(input: GenerateWorkoutInput): Promise<WorkoutPlan> {
   const response = await fetch("/api/generate-workout", {

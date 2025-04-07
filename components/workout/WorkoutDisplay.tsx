@@ -2,7 +2,6 @@ import ExerciseCard from "./ExerciseCard"
 import WorkoutSummaryCard from "./WorkoutSummaryCard"
 import {WorkoutPlan} from "../../lib/workout-prompt-schema"
 import TimedProgressBar from "./TimedProgressBar"
-import {useState} from "react"
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert"
 
 interface WorkoutDisplayProps {
