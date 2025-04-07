@@ -4,6 +4,7 @@ import DateSelection from "./DateSelection"
 import GoalSelection from "./GoalSelection"
 import WorkoutDisplay from "./WorkoutDisplay"
 import {WorkoutGoalEnum, GenerateWorkoutInput, WorkoutPlan} from "@/lib/workout-prompt-schema"
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert"
 
 export async function generateWorkout(input: GenerateWorkoutInput): Promise<WorkoutPlan> {
   const response = await fetch("/api/generate-workout", {
@@ -34,6 +35,7 @@ export default function WorkoutWizard() {
   const [goal, setGoal] = useState<WorkoutGoalEnum | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [workout, setWorkout] = useState<WorkoutPlan | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchWorkout = async () => {
@@ -44,9 +46,10 @@ export default function WorkoutWizard() {
             goal,
           })
           setWorkout(data)
+          setError(null)
         } catch (error) {
           console.error("Error generating workout:", error)
-          // You might want to show an error message to the user here
+          setError("Failed to generate workout.")
         } finally {
           setIsGenerating(false)
         }
@@ -71,8 +74,6 @@ export default function WorkoutWizard() {
 
   return (
     <>
-      {isGenerating && <Progress value={progress} className="w-64" />}
-
       {currentPage === WorkoutWizardPage.DATE_SELECTION && (
         <DateSelection date={lastPeriodDate} onDateChange={setLastPeriodDate} onNext={handleNext} />
       )}
@@ -82,11 +83,19 @@ export default function WorkoutWizard() {
       )}
 
       {currentPage === WorkoutWizardPage.WORKOUT_DISPLAY && (
-        <WorkoutDisplay
-          isGenerating={isGenerating}
-          workout={workout}
-          onGenerationComplete={() => {}}
-        />
+        <>
+          {error && (
+            <Alert variant="destructive">
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          <WorkoutDisplay
+            isGenerating={isGenerating}
+            workout={workout}
+            onGenerationComplete={() => {}}
+          />
+        </>
       )}
     </>
   )
