@@ -30,7 +30,7 @@ export default function DateSelection({date, onDateChange, onNext}: DateSelectio
           Next
         </Button>
       </div>
-      <Alert className="mt-4 mb-10">
+      <Alert className="mt-4 mb-2">
         <Lightbulb className="h-5 w-5" />
         <AlertTitle>Did you know?</AlertTitle>
         <AlertDescription>
