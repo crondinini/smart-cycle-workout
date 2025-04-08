@@ -20,8 +20,6 @@ export default function DateSelection({date, onDateChange, onNext}: DateSelectio
           numberOfMonths={2}
           mode="single"
           defaultMonth={lastMonth}
-          // fromDate={lastMonth}
-          // startMonth={new Date(2024, 6)}
           selected={date}
           onSelect={onDateChange}
           className="rounded-md border"
