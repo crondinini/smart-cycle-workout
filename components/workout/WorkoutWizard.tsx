@@ -3,6 +3,7 @@ import DateSelection from "./DateSelection"
 import GoalSelection from "./GoalSelection"
 import WorkoutDisplay from "./WorkoutDisplay"
 import {WorkoutGoalEnum, GenerateWorkoutInput, WorkoutPlan} from "@/lib/workout-prompt-schema"
+import { Button } from "../ui/button"
 
 export async function generateWorkout(input: GenerateWorkoutInput): Promise<WorkoutPlan> {
   const response = await fetch("/api/generate-workout", {
@@ -67,8 +68,22 @@ export default function WorkoutWizard() {
     }
   }
 
+  const handleReset = () => {
+    setCurrentPage(WorkoutWizardPage.DATE_SELECTION)
+    setLastPeriodDate(undefined)
+    setGoal(null)
+    setWorkout(null)
+    setError(null)
+    setGenerationState("not_started")
+  }
+
   return (
     <div className="flex flex-col items-center max-w-3xl mx-auto">
+      {currentPage !== WorkoutWizardPage.DATE_SELECTION && (
+        <Button onClick={handleReset} className="mb-8" disabled={generationState === "in_progress"}>
+          Start again
+        </Button>
+      )}
       {currentPage === WorkoutWizardPage.DATE_SELECTION && (
         <DateSelection date={lastPeriodDate} onDateChange={setLastPeriodDate} onNext={handleNext} />
       )}

@@ -23,6 +23,7 @@ export default function WorkoutDisplay({
     return (
       <div className="flex flex-col gap-8 items-center w-full max-w-4xl">
         <h2 className="text-lg font-bold text-center">Generating your workout...</h2>
+        <p className="text-sm text-center">Please be patient and don&apos;t refresh the page, this may take a few seconds.</p>
         <TimedProgressBar
           isActive={generationState === 'in_progress'}
           duration={30000} // 30 seconds
