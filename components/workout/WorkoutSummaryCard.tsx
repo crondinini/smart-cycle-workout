@@ -8,6 +8,10 @@ interface WorkoutSummaryCardProps {
   summary: WorkoutSummary
 }
 
+const uppercaseFirstLetter = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
 export default function WorkoutSummaryCard({summary}: WorkoutSummaryCardProps) {
   return (
     <Card className="w-full bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950 dark:to-indigo-950 border-none shadow-md">
@@ -15,7 +19,7 @@ export default function WorkoutSummaryCard({summary}: WorkoutSummaryCardProps) {
         <div className="flex flex-col space-y-4">
           <div className="flex items-center justify-between">
             <Badge variant="outline" className="bg-white/80 dark:bg-gray-800/80 shadow-sm py-1.5">
-              {`${summary.currentPeriodPhase} | Last Period ${new Date(
+              {`${uppercaseFirstLetter(summary.currentPeriodPhase)} | Last Period ${new Date(
                 summary.lastPeriodDate,
               ).toLocaleDateString()}`}
             </Badge>
@@ -23,7 +27,7 @@ export default function WorkoutSummaryCard({summary}: WorkoutSummaryCardProps) {
               variant="secondary"
               className="bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300"
             >
-              Today&apos;s Workout
+              {`Goal: ${uppercaseFirstLetter(summary.goal).split("-").join(" ")}`}
             </Badge>
           </div>
 

@@ -21,6 +21,7 @@ export const WorkoutSummarySchema = z.object({
   energyConsideration: z.string(),
   currentPeriodPhase: z.string(),
   lastPeriodDate: z.coerce.date(),
+  goal: z.string(),
 })
 
 export const ExerciseSchema = z.object({

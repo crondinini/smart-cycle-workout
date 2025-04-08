@@ -26,7 +26,7 @@ export default function WorkoutDisplay({
         <p className="text-sm text-center">Please be patient and don&apos;t refresh the page, this may take a few seconds.</p>
         <TimedProgressBar
           isActive={generationState === 'in_progress'}
-          duration={30000} // 30 seconds
+          duration={10000}
           className="w-64"
         />
       </div>

@@ -1,39 +1,48 @@
+import loki from 'lokijs';
+import exercisesData from './exercises.json';
+
+const db = new loki('fitness.db');
+
+type RapidDBExercise = {
+    name: string
+    bodyPart: string
+    equipment: string
+    target: string
+    gifUrl: string
+    secondaryMuscles: string[]
+    instructions: string[]
+}
+
+const exercisesCollection = db.addCollection<RapidDBExercise>('exercises', {
+  indices: ['bodyPart', 'equipment', 'target']
+});
+
+
+exercisesCollection.insert(exercisesData);
+
 export async function fetchExercises(params: {
-  muscleGroup: string
-  equipment: string
-  bodyPart: string
+  muscleGroup?: string
+  equipment?: string
+  bodyPart?: string
   limit?: number
 }) {
-  // Quick prototyping logic, needs to be refactored,
-  // since it is not handling all possible parameters
-  let url = new URL("https://exercisedb.p.rapidapi.com/exercises")
-  if ("bodyPart" in params) {
-    url = new URL(`https://exercisedb.p.rapidapi.com/exercises/bodyPart/${params.bodyPart}`)
-  }
+  const results = exercisesCollection.chain().find({
+    ...(params.bodyPart && {bodyPart: params.bodyPart}),
+    ...(params.equipment && {equipment: params.equipment}),
+    ...(params.muscleGroup && {target: params.muscleGroup}),
+  })
+  .limit(params.limit || 10)
+  .data()
 
-  const options = {
-    method: "GET",
-    headers: {
-      "X-RapidAPI-Key": process.env.RAPID_API_KEY || "",
-      "X-RapidAPI-Host": "exercisedb.p.rapidapi.com",
-    },
-  }
 
-  try {
-    const response = await fetch(url, options)
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-
-    let results = await response.json()
-    if (params.limit && params.limit > 0) {
-      results = results.slice(0, params.limit)
-    }
-    return results
-  } catch (error) {
+  return results.map((object) => {
     return {
-      error: "Failed to fetch exercises",
-      errorMessage: error instanceof Error ? error.message : "Unknown error",
+      name: object.name,
+      bodyPart: object.bodyPart,
+      equipment: object.equipment,
+      target: object.target,
+      gifUrl: object.gifUrl,
     }
-  }
+  })
 }
+

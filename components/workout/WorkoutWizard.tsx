@@ -1,3 +1,4 @@
+"use client"
 import {useState, useEffect} from "react"
 import DateSelection from "./DateSelection"
 import GoalSelection from "./GoalSelection"
@@ -27,6 +28,48 @@ export enum WorkoutWizardPage {
   WORKOUT_DISPLAY = "WORKOUT_DISPLAY",
 }
 
+function saveToLocalStorage(key: string, data: WorkoutPlan) {
+  if (typeof window !== 'undefined') {
+    try {
+      const jsonString = JSON.stringify(data);
+      localStorage.setItem(key, jsonString);
+      return true;
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+      return false;
+    }
+  }
+  return false;
+}
+
+function getFromLocalStorage(key: string) {
+  if (typeof window !== 'undefined') {
+    try {
+      const jsonString = localStorage.getItem(key);
+      if (!jsonString) return null;
+      return JSON.parse(jsonString);
+    } catch (error) {
+      console.error('Error retrieving from localStorage:', error);
+      return null;
+    }
+  }
+  return null;
+}
+
+function removeFromLocalStorage(key: string) {
+  if (typeof window !== 'undefined') {
+    try {
+      localStorage.removeItem(key);
+      return true;
+    } catch (error) {
+      console.error('Error removing item from localStorage:', error);
+      return false;
+    }
+  }
+  return false;
+}
+
+
 export default function WorkoutWizard() {
   const [currentPage, setCurrentPage] = useState(WorkoutWizardPage.DATE_SELECTION)
   const [lastPeriodDate, setLastPeriodDate] = useState<Date | undefined>(undefined)
@@ -34,6 +77,15 @@ export default function WorkoutWizard() {
   const [workout, setWorkout] = useState<WorkoutPlan | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [generationState, setGenerationState] = useState<"not_started" | "in_progress" | "success" | "error">("not_started")
+
+  useEffect(() => {
+    const storedWorkout = getFromLocalStorage("workout")
+    if (storedWorkout) {
+      setWorkout(storedWorkout)
+      setCurrentPage(WorkoutWizardPage.WORKOUT_DISPLAY)
+      setGenerationState("success")
+    }
+  }, [])
 
   useEffect(() => {
     const fetchWorkout = async () => {
@@ -44,6 +96,7 @@ export default function WorkoutWizard() {
             goal,
           })
           setWorkout(data)
+          saveToLocalStorage("workout", data)
           setError(null)
           setGenerationState("success")
         } catch (error) {
@@ -75,6 +128,7 @@ export default function WorkoutWizard() {
     setWorkout(null)
     setError(null)
     setGenerationState("not_started")
+    removeFromLocalStorage("workout")
   }
 
   return (
