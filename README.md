@@ -12,9 +12,9 @@ The goal of this proof of concept was to explore Anthropic SDKs closer and speci
 
 The application is built with Next.js. It has an UI interface that communicates with a single HTTP POST endpoint to generate the workout. The workout generated is a JSON object that is then displayed in the UI.
 
-The HTTP POST endpoint uses the Anthropic SDK with a custom tool for fetching exercises from RapidDB. I chose to use the Anthropic SDK instead of Vercel AI SDK because I wanted to understand the inner workins better and I didn't want to just abstract it away to another tool.
+The HTTP POST endpoint uses the Anthropic SDK with a custom tool for fetching exercises. I chose to use the Anthropic SDK instead of Vercel AI SDK because I wanted to understand the inner workins better and I didn't want to just abstract it away to another tool. For the fetching of exercises, initially I went API calls to RapidDB, but it was limiting in the combination of exercises I could fetch. So I explored loading the exercises from a JSON file into an in-memory database to be able to fetch any combination of exercises.
 
-The lib/ folder contains the code related to the Anthropic SDK calls, including the System Prompt, the Tools schema and the wip RapidDB fetching function. Zod schemas are used in a couple of places, but not in all of the ones I'd like to be using it.
+The lib/ folder contains the code related to the Anthropic SDK calls, including the System Prompt, the Tools schema and the exercise fetching function. Zod schemas are used in a couple of places, but not in all of the ones I'd like to be using it.
 
 ## Challenges
 
@@ -52,6 +52,8 @@ Some that come to mind (not exhaustive by any means):
 - **Other strategies for ensuring JSON response format**: A potential pattern I would have liked to explore for trying to ensure the JSON format in the final response would be to implement a dedicated "tool" that takes as input the output I need. Unsure if this is an anti-pattern or not, but I'd like to explore it in a future iteration.
 
 - **Fine tuning exercise selection**: I want to try tweaking the prompt to ensure that the LLM makes a better selection of exercises by analyzing the list of exercises it is given before preparing the workout.
+
+- **Exercise randomization**: It would be good to have a randomization algorithm when fetching the exercises from the list available to ensure that the LLM doesn't end up always with the same exercises.
 
 ## Learnings
 
